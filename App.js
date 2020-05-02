@@ -3,5 +3,9 @@ import { View } from 'react-native';
 import AddEntry from './components/AddEntry';
 
 export default function App() {
-  return <AddEntry />;
+  return (
+    <View>
+      <AddEntry />
+    </View>
+  );
 }
