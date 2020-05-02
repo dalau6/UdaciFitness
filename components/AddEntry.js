@@ -6,7 +6,7 @@ import UdaciSteppers from './UdaciSteppers';
 import DateHeader from './DateHeader';
 import { Ionicons } from '@expo/vector-icons';
 import TextButton from './TextButton';
-import { reset } from 'expo/build/AR';
+import { submitEntry, removeEntry } from '../utils/api';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -73,7 +73,7 @@ export default function AddEntry() {
 
     // Navigate to home
 
-    // Save to 'DB'
+    submitEntry({ key, entry });
 
     // Clean local notification
   };
@@ -85,7 +85,7 @@ export default function AddEntry() {
 
     // Route to Home
 
-    // Update 'DB'
+    removeEntry(key);
   };
 
   if (alreadyLogged) {
