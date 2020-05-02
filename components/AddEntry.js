@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { getMetricMetaInfo } from '../utils/helpers';
 import UdaciSlider from './UdaciSlider';
 import UdaciSteppers from './UdaciSteppers';
+import DateHeader from './DateHeader';
 
 function metricReducer(state, action) {
   if (action.type === 'increment') {
@@ -25,7 +26,7 @@ function metricReducer(state, action) {
   } else if (action.type === 'slide') {
     return {
       ...state,
-      [key]: action.value,
+      [action.key]: action.value,
     };
   } else {
     throw new Error(`That action type isn't supported.`);
@@ -45,6 +46,7 @@ export default function AddEntry() {
 
   return (
     <View>
+      <DateHeader date={new Date().toLocaleString()} />
       {Object.keys(metaInfo).map((key) => {
         const { getIcon, type, ...rest } = metaInfo[key];
         const value = state[key];
@@ -55,16 +57,14 @@ export default function AddEntry() {
             {type === 'slider' ? (
               <UdaciSlider
                 value={value}
-                onChange={(value) =>
-                  dispatch({ type: 'slide', key, value })
-                }
+                onChange={(value) => dispatch({ type: 'slide', key, value })}
                 {...rest}
               />
             ) : (
               <UdaciSteppers
                 value={value}
-                onIncrement={() => dispatch({ action: 'increment', key})}
-                onDecrement={() => dispatch({ action: 'decrement', key})}
+                onIncrement={() => dispatch({ action: 'increment', key })}
+                onDecrement={() => dispatch({ action: 'decrement', key })}
                 {...rest}
               />
             )}
