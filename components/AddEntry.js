@@ -17,7 +17,7 @@ function metricReducer(state, action) {
   if (action.type === 'increment') {
     const { key } = action;
     const { max, step } = getMetricMetaInfo(key);
-    const count = state.key + step;
+    const count = state[key] + step;
 
     return {
       ...state,
@@ -25,7 +25,7 @@ function metricReducer(state, action) {
     };
   } else if (action.type === 'decrement') {
     const { key } = action;
-    const count = state.key - getMetricMetaInfo(key).step;
+    const count = state[key] - getMetricMetaInfo(key).step;
 
     return {
       ...state,
@@ -93,8 +93,8 @@ export default function AddEntry() {
             ) : (
               <UdaciSteppers
                 value={value}
-                onIncrement={() => dispatch({ action: 'increment', key })}
-                onDecrement={() => dispatch({ action: 'decrement', key })}
+                onIncrement={() => dispatch({ type: 'increment', key })}
+                onDecrement={() => dispatch({ type: 'decrement', key })}
                 {...rest}
               />
             )}
