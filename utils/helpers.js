@@ -1,13 +1,19 @@
 import React from 'react';
-import { view } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
   FontAwesome,
   MaterialIcons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
-import { white } from './colors';
+import { white, orange } from './colors';
 
 // utils/helpers.js
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    flex: 1,
+  },
+});
 
 export function getMetricMetaInfo(metric) {
   const info = {
@@ -128,81 +134,4 @@ export function timeToString(time = Date.now()) {
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
   );
   return todayUTC.toISOString().split('T')[0];
-}
-
-export function getMetricMetaInfo(metric) {
-  const info = {
-    run: {
-      displayName: 'Run',
-      max: 50,
-      unit: 'miles',
-      stop: 1,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <view>
-            <MaterialIcons name="directions-run" color={'black'} size={35} />
-          </view>
-        );
-      },
-    },
-    bike: {
-      displayName: 'Bike',
-      max: 100,
-      unit: 'miles',
-      stop: 1,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <view>
-            <MaterialCommunityIcons name="bike" color={'black'} size={35} />
-          </view>
-        );
-      },
-    },
-    swim: {
-      displayName: 'Swim',
-      max: 9900,
-      unit: 'meters',
-      stop: 100,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <view>
-            <MaterialCommunityIcons name="swim" color={'black'} size={35} />
-          </view>
-        );
-      },
-    },
-    sleep: {
-      displayName: 'Sleep',
-      max: 24,
-      unit: 'hours',
-      stop: 1,
-      type: 'slider',
-      getIcon() {
-        return (
-          <view>
-            <FontAwesome name="bed" color={'black'} size={35} />
-          </view>
-        );
-      },
-    },
-    eat: {
-      displayName: 'Eat',
-      max: 10,
-      unit: 'rating',
-      stop: 1,
-      type: 'slider',
-      getIcon() {
-        return (
-          <view>
-            <MaterialCommunityIcons name="food" color={'black'} size={35} />
-          </view>
-        );
-      },
-    },
-  };
-
-  return typeof metric === 'undefined' ? info : info[metric];
 }
