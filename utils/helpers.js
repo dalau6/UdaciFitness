@@ -5,7 +5,7 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
-import { white, orange } from './colors';
+import { white, orange, red, blue, lightPurp, pink } from './colors';
 
 // utils/helpers.js
 

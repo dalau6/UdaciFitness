@@ -1,29 +1,31 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import { getMetricMetaInfo } from '../utils/helpers';
+import UdaciSlider from './UdaciSlider';
+import UdaciSteppers from './UdaciSteppers';
 
 function metricReducer(state, action) {
   if (action.type === 'increment') {
-    const { metric } = action;
-    const { max, step } = getMetricMetaInfo(metric);
-    const count = state.metric + step;
+    const { key } = action;
+    const { max, step } = getMetricMetaInfo(key);
+    const count = state.key + step;
 
     return {
       ...state,
-      [metric]: count > max ? max : count,
+      [key]: count > max ? max : count,
     };
   } else if (action.type === 'decrement') {
-    const { metric } = action;
-    const count = state.metric - getMetricMetaInfo(metric).step;
+    const { key } = action;
+    const count = state.key - getMetricMetaInfo(key).step;
 
     return {
       ...state,
-      [metric]: count < 0 ? 0 : count,
+      [key]: count < 0 ? 0 : count,
     };
   } else if (action.type === 'slide') {
     return {
       ...state,
-      [action.metric]: action.value,
+      [key]: action.value,
     };
   } else {
     throw new Error(`That action type isn't supported.`);
@@ -39,5 +41,36 @@ export default function AddEntry() {
     eat: 0,
   });
 
-  return <View>{getMetricMetaInfo('bike').getIcon()}</View>;
+  const metaInfo = getMetricMetaInfo();
+
+  return (
+    <View>
+      {Object.keys(metaInfo).map((key) => {
+        const { getIcon, type, ...rest } = metaInfo[key];
+        const value = state[key];
+
+        return (
+          <View key={key}>
+            {getIcon()}
+            {type === 'slider' ? (
+              <UdaciSlider
+                value={value}
+                onChange={(value) =>
+                  dispatch({ type: 'slide', key, value })
+                }
+                {...rest}
+              />
+            ) : (
+              <UdaciSteppers
+                value={value}
+                onIncrement={() => dispatch({ action: 'increment', key})}
+                onDecrement={() => dispatch({ action: 'decrement', key})}
+                {...rest}
+              />
+            )}
+          </View>
+        );
+      })}
+    </View>
+  );
 }
