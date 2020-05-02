@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { getMetricMetaInfo } from '../utils/helpers';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { getMetricMetaInfo, timeToString } from '../utils/helpers';
 import UdaciSlider from './UdaciSlider';
 import UdaciSteppers from './UdaciSteppers';
 import DateHeader from './DateHeader';
+
+function SubmitBtn({ onPress }) {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>SUBMIT</Text>
+    </TouchableOpacity>
+  );
+}
 
 function metricReducer(state, action) {
   if (action.type === 'increment') {
@@ -28,6 +36,14 @@ function metricReducer(state, action) {
       ...state,
       [action.key]: action.value,
     };
+  } else if (action.type === 'reset') {
+    return {
+      run: 0,
+      bike: 0,
+      swim: 0,
+      sleep: 0,
+      eat: 0,
+    };
   } else {
     throw new Error(`That action type isn't supported.`);
   }
@@ -43,6 +59,20 @@ export default function AddEntry() {
   });
 
   const metaInfo = getMetricMetaInfo();
+  const submit = () => {
+    const key = timeToString();
+    const entry = state;
+
+    // Update Redux
+
+    dispatch({ type: 'reset' });
+
+    // Navigate to home
+
+    // Save to 'DB'
+
+    // Clean local notification
+  };
 
   return (
     <View>
@@ -71,6 +101,7 @@ export default function AddEntry() {
           </View>
         );
       })}
+      <SubmitBtn onPress={submit} />
     </View>
   );
 }
