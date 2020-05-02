@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import { getMetricMetaInfo, timeToString } from '../utils/helpers';
+import {
+  getMetricMetaInfo,
+  timeToString,
+  getDailyReminderValue,
+} from '../utils/helpers';
 import UdaciSlider from './UdaciSlider';
 import UdaciSteppers from './UdaciSteppers';
 import DateHeader from './DateHeader';
 import { Ionicons } from '@expo/vector-icons';
 import TextButton from './TextButton';
 import { submitEntry, removeEntry } from '../utils/api';
+import { connect } from 'react-redux';
+import { addEntry } from '../actions';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -52,8 +58,8 @@ function metricReducer(state, action) {
   }
 }
 
-export default function AddEntry() {
-  const [state, dispatch] = React.useReducer(metricReducer, {
+function AddEntry({ alreadyLogged, dispatch }) {
+  const [state, metricDispatch] = React.useReducer(metricReducer, {
     run: 0,
     bike: 0,
     swim: 0,
@@ -67,9 +73,13 @@ export default function AddEntry() {
     const key = timeToString();
     const entry = state;
 
-    // Update Redux
+    dispatch(
+      addEntry({
+        [key]: entry,
+      })
+    );
 
-    dispatch({ type: 'reset' });
+    metricDispatch({ type: 'reset' });
 
     // Navigate to home
 
@@ -81,7 +91,11 @@ export default function AddEntry() {
   const reset = () => {
     const key = timeToString();
 
-    // Update Redux
+    dispatch(
+      addEntry({
+        [key]: getDailyReminderValue(),
+      })
+    );
 
     // Route to Home
 
@@ -111,14 +125,16 @@ export default function AddEntry() {
             {type === 'slider' ? (
               <UdaciSlider
                 value={value}
-                onChange={(value) => dispatch({ type: 'slide', key, value })}
+                onChange={(value) =>
+                  metricDispatch({ type: 'slide', key, value })
+                }
                 {...rest}
               />
             ) : (
               <UdaciSteppers
                 value={value}
-                onIncrement={() => dispatch({ type: 'increment', key })}
-                onDecrement={() => dispatch({ type: 'decrement', key })}
+                onIncrement={() => metricDispatch({ type: 'increment', key })}
+                onDecrement={() => metricDispatch({ type: 'decrement', key })}
                 {...rest}
               />
             )}
@@ -129,3 +145,13 @@ export default function AddEntry() {
     </View>
   );
 }
+
+function mapStateToProps(state) {
+  const key = timeToString();
+
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === undefined,
+  };
+}
+
+export default connect(mapStateToProps)(AddEntry);
