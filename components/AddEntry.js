@@ -4,6 +4,9 @@ import { getMetricMetaInfo, timeToString } from '../utils/helpers';
 import UdaciSlider from './UdaciSlider';
 import UdaciSteppers from './UdaciSteppers';
 import DateHeader from './DateHeader';
+import { Ionicons } from '@expo/vector-icons';
+import TextButton from './TextButton';
+import { reset } from 'expo/build/AR';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -59,6 +62,7 @@ export default function AddEntry() {
   });
 
   const metaInfo = getMetricMetaInfo();
+
   const submit = () => {
     const key = timeToString();
     const entry = state;
@@ -73,6 +77,26 @@ export default function AddEntry() {
 
     // Clean local notification
   };
+
+  const reset = () => {
+    const key = timeToString();
+
+    // Update Redux
+
+    // Route to Home
+
+    // Update 'DB'
+  };
+
+  if (alreadyLogged) {
+    return (
+      <View>
+        <Ionicons name="md-happy" size={100} />
+        <Text>You already logged your information for today</Text>
+        <TextButton onPress={reset}>Reset</TextButton>
+      </View>
+    );
+  }
 
   return (
     <View>
