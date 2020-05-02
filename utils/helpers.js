@@ -10,9 +10,7 @@ import { white, orange } from './colors';
 // utils/helpers.js
 
 const styles = StyleSheet.create({
-  iconContainer: {
-    flex: 1,
-  },
+  iconContainer: {},
 });
 
 export function getMetricMetaInfo(metric) {
