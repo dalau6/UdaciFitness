@@ -5,12 +5,20 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
-import { white, orange, red, blue, lightPurp, pink } from './colors';
+import { white, red, orange, blue, lightPurp, pink } from './colors';
 
 // utils/helpers.js
 
 const styles = StyleSheet.create({
-  iconContainer: {},
+  iconContainer: {
+    padding: 5,
+    borderRadius: 0,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
+  },
 });
 
 export function getMetricMetaInfo(metric) {
