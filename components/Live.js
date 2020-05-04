@@ -9,13 +9,18 @@ import {
 import { Foundation } from '@expo/vector-icons';
 import { purple, white } from '../utils/colors';
 import { calculateDirection } from '../utils/helpers';
+import { Permissions, Location } from 'expo';
+import Animated from 'react-native-reanimated';
 
 export default function Live() {
   const [coords, useCoords] = React.useState(null);
   const [status, useStatus] = React.useState(null);
   const [direction, useDirection] = React.useState('');
+  const [bounceValue, useBounceValue] = React.useState(new Animated.Value(1));
 
   React.useEffect(() => {
+    askPermission();
+
     Permissions.getAsync(Permissions.LOCATION)
       .then(({ status }) => {
         if (status === 'granted') {
@@ -53,6 +58,13 @@ export default function Live() {
       },
       ({ coords }) => {
         const newDirection = calculateDirection(coords.heading);
+
+        if (newDirection !== direction) {
+          Animated.sequence([
+            Animated.timing(bounceValue, { duration: 200, toValue: 1.04 }),
+            Animated.spring(bounceValue, { toValue: 1, friction: 4 }),
+          ]).start();
+        }
 
         useCoords(coords);
         useStatus('granted');
@@ -93,7 +105,11 @@ export default function Live() {
     <View style={styles.container}>
       <View style={styles.directionContainer}>
         <Text style={styles.header}>You're heading</Text>
-        <Text style={styles.direction}>{direction}</Text>
+        <Animated.Text
+          style={[styles.direction, { transform: [{ scale: bounceValue }] }]}
+        >
+          {direction}
+        </Animated.Text>
       </View>
       <View style={styles.metricContainer}>
         <View style={styles.metric}>
