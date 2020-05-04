@@ -10,7 +10,7 @@ import DateHeader from './DateHeader';
 import MetricCard from './MetricCard';
 import { AppLoading } from 'expo';
 
-function History({ entries, dispatch }) {
+function History({ entries, dispatch, navigation }) {
   const [ready, useReady] = react.useState(false);
 
   React.useEffect(() => {
@@ -36,7 +36,9 @@ function History({ entries, dispatch }) {
           <Text style={styles.noDataText}>{today}</Text>
         </View>
       ) : (
-        <TouchableOpacity onPress={() => console.log('Pressed!')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('EntryDtail', { entryId: key })}
+        >
           <MetricCard metrics={metrics} date={formattedDate} />
         </TouchableOpacity>
       )}
