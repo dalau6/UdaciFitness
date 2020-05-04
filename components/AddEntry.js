@@ -20,6 +20,7 @@ import { submitEntry, removeEntry } from '../utils/api';
 import { connect } from 'react-redux';
 import { addEntry } from '../actions';
 import { white, purple } from '../utils/colors';
+import { NavigationActions } from 'react-navigation';
 
 function SubmitBtn({ onPress }) {
   return (
@@ -70,7 +71,7 @@ function metricReducer(state, action) {
   }
 }
 
-function AddEntry({ alreadyLogged, dispatch }) {
+function AddEntry({ alreadyLogged, dispatch, navigation }) {
   const [state, metricDispatch] = React.useReducer(metricReducer, {
     run: 0,
     bike: 0,
@@ -93,7 +94,7 @@ function AddEntry({ alreadyLogged, dispatch }) {
 
     metricDispatch({ type: 'reset' });
 
-    // Navigate to home
+    toHome();
 
     submitEntry({ key, entry });
 
@@ -109,9 +110,17 @@ function AddEntry({ alreadyLogged, dispatch }) {
       })
     );
 
-    // Route to Home
+    toHome();
 
     removeEntry(key);
+  };
+
+  const toHome = () => {
+    NavigationActions.dispatch(
+      NavigationActions.back({
+        key: 'AddEntry',
+      })
+    );
   };
 
   if (alreadyLogged) {
