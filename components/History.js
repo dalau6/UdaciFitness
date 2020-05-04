@@ -8,8 +8,11 @@ import UdaciFitnessCalendar from 'udacifitness-calendar';
 import { white } from '../utils/colors';
 import DateHeader from './DateHeader';
 import MetricCard from './MetricCard';
+import { AppLoading } from 'expo';
 
 function History({ entries, dispatch }) {
+  const [ready, useReady] = react.useState(false);
+
   React.useEffect(() => {
     fetchCalendarResults()
       .then((entries) => dispatch(receiveEntries(entries)))
@@ -21,7 +24,8 @@ function History({ entries, dispatch }) {
             })
           );
         }
-      });
+      })
+      .then(() => useReady(true));
   }, []);
 
   const renderItem = ({ today, ...entries }, formattedDate, key) => (
@@ -47,6 +51,10 @@ function History({ entries, dispatch }) {
       </Text>
     </View>
   );
+
+  if (ready === false) {
+    return <AppLoading />;
+  }
 
   return (
     <UdaciFitnessCalendar
