@@ -8,13 +8,46 @@ import {
 } from 'react-native';
 import { Foundation } from '@expo/vector-icons';
 import { purple, white } from '../utils/colors';
+import { calculateDirection } from '../utils/helpers';
 
 export default function Live() {
   const [coords, useCoords] = React.useState(null);
   const [status, useStatus] = React.useState(null);
   const [direction, useDirection] = React.useState('');
 
+  React.useEffect(() => {
+    Permissions.getAsync(Permissions.LOCATION)
+      .then(({ status }) => {
+        if (status === 'granted') {
+          return setLocation();
+        }
+
+        useStatus(status);
+      })
+      .catch((error) => {
+        console.warn('Error getting Location permission: ', error);
+
+        useStatus('undetermined');
+      });
+  }, []);
+
   const askPermission = () => {};
+  const setLocation = () => {
+    Location.watchPositionAsync(
+      {
+        enableHighAccuracy: true,
+        timeInterval: 1,
+        distanceInterval: 1,
+      },
+      ({ coords }) => {
+        const newDirection = calculateDirection(coords.heading);
+
+        useCoords(coords);
+        useStatus('granted');
+        useDirection(newDirection);
+      }
+    );
+  };
 
   if (status === null) {
     return <ActivityIndicator style={{ marginTop: 30 }} />;
